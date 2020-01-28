@@ -31,7 +31,7 @@ const Menu=({history})=>(
                     { hasAuthenticated() && (
                         <>
                         <li className="nav-item">
-                            <a className='nav-link' onClick={()=>signout(()=>{history.push('/')})} style={(isActive(history,'/signout'),{cursor:'pointer'})}>Sign Out</a>
+                            <span className='nav-link' onClick={()=>signout(()=>{history.push('/')})} style={(isActive(history,'/signout'),{cursor:'pointer'})}>Sign Out</span>
                         </li>
                         <li className="nav-item">
                             <Link className='nav-link' to={`/users/${hasAuthenticated().User._id}`} style={(isActive(history,`/users/${hasAuthenticated().User._id}`))}>{hasAuthenticated().User.name}'s Profile </Link>                          

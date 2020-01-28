@@ -37,7 +37,7 @@ export default class Users extends Component {
         <div className='row'>
             {users.map((user,i)=>(
                 <div className='card col-md-4' key={i}>
-                    <img className='card-img-top' src={image} style={{width:'100%', height:'15vw', objectFit:'cover'}} alt='card image cap'/>
+                    <img className='card-img-top' src={image} style={{width:'100%', height:'15vw', objectFit:'cover'}} alt='card'/>
                     <div className='card-body'>
                         <h5 className='card-title'>{user.name}</h5>
                         <p className='card-text'>{user.email}</p>
