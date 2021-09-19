@@ -1,6 +1,7 @@
 const mongoose=require('mongoose');
 const uuidv1=require('uuid/v1');
 const crypto=require('crypto');
+const {ObjectId}=mongoose.Schema;
 
 const userSchema=mongoose.Schema({
     name:{
@@ -25,7 +26,17 @@ const userSchema=mongoose.Schema({
         type:Date,
         default:Date.now
     },
-    updated:Date
+    updated:Date,
+    photo:{
+        data:Buffer,
+        contentType:String
+    },
+    about:{
+        type:String,
+        trim:true
+    },
+    followers :[{type:ObjectId,ref:"User"}],
+    following :[{type:ObjectId,ref:"User"}]
 });
 
    
@@ -50,4 +61,4 @@ userSchema.methods.authenticate=function(plaintext){
     return this.hashed_password===this.encryptPassword(plaintext);
 }
 
-module.exports=mongoose.model("User",userSchema);
+module.exports=mongoose.model("User",userSchema); 

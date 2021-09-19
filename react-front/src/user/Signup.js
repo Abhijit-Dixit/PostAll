@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {signup} from '../auth'
+import { Link } from 'react-router-dom';
 
 export default class Signup extends Component {
     constructor(){
@@ -29,14 +30,10 @@ export default class Signup extends Component {
             password
         };
         signup(user).then(data=>{
-            //console.log('yahooooooooo')
             if(data.error){
                 this.setState({error:data.error});
-                //console.log('baby');
-                
             }
             else{
-                //console.log('suar');
                 this.setState({
                     name:'',
                     email:'',
@@ -47,6 +44,38 @@ export default class Signup extends Component {
             }
         })
     }
+    signupform=(name,email,password)=>(
+        <form>
+            <div className='form-group'>
+                <label className='text-muted'>Name</label>
+                <input 
+                type='text'
+                className="form-control"
+                onChange={this.handleChange("name")}
+                value={name}
+                />
+            </div>
+            <div>
+                <label className='text-muted'>Email</label>
+                <input 
+                type='email' 
+                className="form-control"
+                onChange={this.handleChange('email')}
+                value={email}
+                />
+            </div>
+            <div>
+                <label className='text-muted'>Password</label>
+                <input 
+                type='password' 
+                className="form-control"
+                onChange={this.handleChange('password')}
+                value={password}
+                />
+            </div>
+            <button onClick={this.clickSubmit}>Submit</button>
+        </form>
+    )
 
     render() {
         return (
@@ -58,39 +87,10 @@ export default class Signup extends Component {
                 </div>
                 <div className='alert alert-info'
                     style={{display:this.state.op?"":"none"}}>
-                    New account is successfully created. Please Sign In.
+                    New account is successfully created. Please <Link to="/signin"> Sign In</Link>.
                 </div>
-                <form>
-                    <div className='form-group'>
-                        <label className='text-muted'>Name</label>
-                        <input 
-                        type='text'
-                        className="form-control"
-                        onChange={this.handleChange("name")}
-                        value={this.state.name}
-                        />
-                    </div>
-                    <div>
-                        <label className='text-muted'>Email</label>
-                        <input 
-                        type='email' 
-                        className="form-control"
-                        onChange={this.handleChange('email')}
-                        value={this.state.email}
-                        />
-                    </div>
-                    <div>
-                        <label className='text-muted'>Password</label>
-                        <input 
-                        type='password' 
-                        className="form-control"
-                        onChange={this.handleChange('password')}
-                        value={this.state.password}
-                        />
-                    </div>
-                    <button onClick={this.clickSubmit}>Submit</button>
-                </form>
-                
+                {this.signupform(this.state.name,this.state.email,this.state.password)}
+                            
                 
             </div>
         )

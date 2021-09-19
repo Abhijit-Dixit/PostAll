@@ -4,15 +4,15 @@ import {Redirect, Link} from 'react-router-dom';
 import {read} from '../user/userApi';
 import image from '../images.png';
 import DeleteUser from './deleteUser';
+//import user from '../../../nodeapi/models/user';
 
-export default class Profile extends Component {
-    constructor(){
-        super();
-        this.state={
-            user:'',
-            redirectToSignin:false
-        }
+class Profile extends Component {
+    
+    state={
+        user: '',
+        redirectToSignin:false
     }
+    
     
     init=(userId)=>{
         read(userId,hasAuthenticated().token)
@@ -42,16 +42,23 @@ export default class Profile extends Component {
         this.init(userId);
     } 
 
+    
+
     render() {
         if(this.state.redirectToSignin){
             return <Redirect to='/signin'/>;
         }
+
+        const photoUrl = this.state.user._id ? `${process.env.REACT_APP_API_URL}/user/photo/${this.state.user._id}?${new Date().getTime()}`: image;
         return (
             <div className='container'>
             <h2 className='mt-5 mb-5'>Profile</h2>
                 <div className='row'>
                     <div className='col-md-6'>                        
-                        <img className='card-img-top' src={image} style={{width:'100%', height:'15vw', objectFit:'cover'}} alt='card'/>
+                    <img src={photoUrl} 
+                        alt={this.state.user.name}
+                        style={{height:"200px", width:"auto"}}
+                        className="img-thumbnail"/>
                         
                     </div>
                     <div className='col-md-6'>
@@ -73,9 +80,18 @@ export default class Profile extends Component {
 
                     </div>
                 </div>
+                <div className="row">
+                    <div className="col md-12 mt-5 mb-5">
+                        <hr/>
+                        <p className="lead">{this.state.user.about}</p>
+                        <hr/>
+                    </div>
+                </div>
                 
             </div>
             
         )
     }
 }
+
+export default Profile;

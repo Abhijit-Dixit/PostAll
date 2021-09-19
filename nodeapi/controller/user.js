@@ -1,7 +1,14 @@
 const User=require('../models/user');
 const _=require('lodash');
+const formidable = require('formidable');
+const fs = require('fs');
+
+
 exports.userById=(req,res,next,id)=>{
-    User.findById(id).exec((err,user)=>{
+    User.findById(id)
+    .populate('following','_id name')
+    .populate('followers','_id name')
+    .exec((err,user)=>{
         if(err||!user){
             return res.status(404).json({
                 error:"user not found"
@@ -34,21 +41,64 @@ exports.getUser=(req,res)=>{
     return res.json(req.profile);
 }
 
-exports.updateUser=(req,res,next)=>{
-    let user=req.profile;
-    user=_.extend(user,req.body);
-    user.updated=Date.now();
-    user.save((err)=>{
+// exports.updateUser=(req,res,next)=>{
+//     let user=req.profile;
+//     console.log("arrreey")
+//     user=_.extend(user,req.body);
+//     user.updated=Date.now();
+//     user.save((err)=>{
+//         if(err){
+//             console.log("error happened ! "+err);
+//         }
+//         req.profile.hashed_password=undefined;
+//         req.profile.salt=undefined;
+//         res.json({user});
+
+//     });
+
+// }
+
+exports.updateUser = (req,res,next) => {
+    let form = new formidable.IncomingForm();
+    form.keepExtensions = true;
+    form.parse(req,(err,fields,files)=>{
         if(err){
-            console.log("error happened ! "+err);
+            return res.status(400).json({
+                error: "Photo could not be uploaded"
+            })
         }
-        req.profile.hashed_password=undefined;
-        req.profile.salt=undefined;
-        res.json({user});
 
-    });
+        // save user
+        let user = req.profile
+        user = _.extend(user,fields)
+        user.updated =Date.now();
 
+        if(files.photo){
+            user.photo.data=fs.readFileSync(files.photo.path)
+            user.photo.contentType=files.photo.type
+        }
+
+        user.save((err,result)=>{
+            if(err){
+                return res.status(400).json({
+                    error:err
+                })
+            }
+            user.hashed_password=undefined;
+            user.salt=undefined;
+            res.json(user);
+        })
+
+    })
 }
+
+exports.userPhoto = (req,res,next)=>{
+    if(req.profile.photo.data){
+        res.set("Content-Type", req.profile.photo.contentType)
+        return res.send(req.profile.photo.data);
+    }
+}
+
 exports.deleteUser=(req,res,next)=>{
     let user=req.profile;
     user.remove((err)=>{
