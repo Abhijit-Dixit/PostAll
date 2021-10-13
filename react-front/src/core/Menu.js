@@ -36,6 +36,7 @@ const Menu=({history})=>(
                         <li className="nav-item">
                             <Link className='nav-link' to={`/users/${hasAuthenticated().User._id}`} style={(isActive(history,`/users/${hasAuthenticated().User._id}`))}>{hasAuthenticated().User.name}'s Profile </Link>                          
                         </li>
+                        
                         </>
                     )}
                     

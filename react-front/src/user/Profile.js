@@ -4,19 +4,34 @@ import {Redirect, Link} from 'react-router-dom';
 import {read} from '../user/userApi';
 import image from '../images.png';
 import DeleteUser from './deleteUser';
+import FollowProfileButton from './FollowProfileButton';
 //import user from '../../../nodeapi/models/user';
 
 class Profile extends Component {
     
     state={
         user: '',
-        redirectToSignin:false
+        redirectToSignin:false,
+        following:false,
+        error:''
     }
     
-    
+    checkFollow=(user)=>{
+        const jwt=hasAuthenticated();
+        console.log("jwt",jwt);
+        const match=user.followers.find(follower=>{
+            if(follower)return follower._id===jwt.User._id;
+        })
+        if(match)return match;
+        return false;
+    }
+
     init=(userId)=>{
         read(userId,hasAuthenticated().token)
         .then(data=>{
+            let following = this.checkFollow(data);
+            console.log("following ");
+            console.log(following);
             if(data.error){
                 this.setState({
                     redirectToSignin:true
@@ -24,11 +39,30 @@ class Profile extends Component {
             }
             else{
                 this.setState({
-                    user:data
+                    user:data,
+                    following:following
                 })
             }    
             
         });
+    }
+
+    
+
+    clickFollow = callApi => {
+        
+        const userId=hasAuthenticated().User._id;
+        const token=hasAuthenticated().token;
+        console.log(token);
+
+        callApi(userId,token,this.state.user._id)
+        .then(data=>{
+            console.log(data);            
+        })
+        .catch(err=>{
+            console.log(err);
+        })       
+
     }
 
     componentDidMount(){
@@ -68,7 +102,7 @@ class Profile extends Component {
                         {
                         hasAuthenticated().User &&
                         hasAuthenticated().User._id===this.state.user._id
-                        && (
+                        ? (
                             <div className='d-inline-block mt-5'>
                                 <Link className='btn btn-raised btn-success mr-5'
                                 to={`/user/edit/${this.state.user._id}`}>
@@ -76,7 +110,9 @@ class Profile extends Component {
                                 </Link>
                                 <DeleteUser userId={this.state.user._id}/>
                             </div>
-                        )}
+                        ):
+                        <FollowProfileButton following={this.state.following}
+                                            onButtonClick={this.clickFollow}/>}
 
                     </div>
                 </div>

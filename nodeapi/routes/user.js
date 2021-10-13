@@ -11,9 +11,9 @@ router.put('/users/:userId',requiredSignin,updateUser);
 router.delete('/users/:userId',requiredSignin,hasAuthorization,deleteUser);
 // photo
 router.get("/user/photo/:userId",userPhoto);
-//
-router.put("/user/follow",requiredSignin,addFollowing,addFollower);
-router.pus("user/unfollow",requiredSignin,removeFollowing,removeFollower);
+
+router.put("/user/follow",requiredSignin,addFollower);
+router.put("user/unfollow",requiredSignin,removeFollowing,removeFollower);
 // any route containing :userId, our app will first execute userByID()
 router.param('userId',userById);
 

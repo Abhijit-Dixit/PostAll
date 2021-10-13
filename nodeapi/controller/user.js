@@ -110,11 +110,16 @@ exports.deleteUser=(req,res,next)=>{
 }
 
 exports.addFollowing=(req,res,next)=>{
+    console.log("ran");
     User.findByIdAndUpdate(req.body.userId,{$push:{following: req.body.followId}},(err,result)=>{
-        if(err){
-            res.status(400).json({error:err});
+        if(err){            
+            console.log('error');
+            console.log(err);
         }
-        next();
+        else{
+            console.log("chala toh hai");
+        }
+        
     })
 }
 
@@ -124,12 +129,14 @@ exports.addFollower=(req,res,next)=>{
     .populate("followers","_id name")
     .exec((err,result)=>{
         if(err){
-            res.status(400).json({error:err});
+            return res.status(400).json({error:err});
         }
+        console.log("run succusful")
         result.hashed_password=undefined;
         result.salt=undefined;
-        res.status(200).json(result);
+        return res.status(200).json(result);
     });
+    next();
     
 }
 
@@ -150,9 +157,11 @@ exports.removeFollower=(req,res,next)=>{
         if(err){
             res.status(400).json({error:err});
         }
+        
         result.hashed_password=undefined;
         result.salt=undefined;
         res.status(200).json(result);
     });
+    
     
 }
