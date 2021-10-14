@@ -4,6 +4,11 @@ import {remove} from '../user/userApi';
 import { Redirect } from 'react-router-dom';
 import {signout} from '../auth/index';
 
+/*
+The easiest way to use <Redirect/> is by maintaining a redirect property inside the state of the component.
+Whenever you want to redirect to another path, you can simply change the state to re-render the component, thus rendering the <Redirect> component.
+
+*/
 
 export default class DeleteUser extends Component {
     state={
