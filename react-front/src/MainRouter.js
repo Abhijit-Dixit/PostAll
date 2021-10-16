@@ -8,6 +8,8 @@ import Profile from './user/Profile';
 import Users from './user/Users';
 import EditProfile from './user/EditProfile';
 import PrivateRoute from './auth/privateRoute';
+import ReadSinglePost from './post/ReadSinglePost';
+import WritePost from './post/WritePost';
 
 // This is the file where we have implmented Client Side Routing.
 
@@ -21,6 +23,8 @@ const MainRouter=()=>(
                 <Route exact path='/users' component={Users}/>
                 <Route exact path='/signup' component={Signup}/>
                 <Route path='/signin' component={Signin}/>
+                <Route path='/post/new' component={WritePost}/>
+                <Route path='/post' component={ReadSinglePost}/>
                 <PrivateRoute exact path='/users/:userId'  component={Profile}/>
                 <PrivateRoute exact path='/user/edit/:userId'  component={EditProfile}/>                
             </Switch>

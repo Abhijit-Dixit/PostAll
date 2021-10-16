@@ -2,6 +2,11 @@ import React, { Component } from 'react'
 import {Redirect} from 'react-router-dom'
 import {authenticate,signin} from '../auth';
 
+
+/*
+Though the password in the backend are stored as hash(password+salt), but when sending
+pswd filled by user on the frontend, they are simply sent as plain text, as HTTPS is sufficiently secure.
+*/
 export default class Signin extends Component {
     constructor(){
         super();

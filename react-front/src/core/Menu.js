@@ -1,6 +1,8 @@
-import {Link,withRouter} from 'react-router-dom'
-import React from 'react'
-import {signout,hasAuthenticated} from '../auth'
+import { Link, withRouter } from "react-router-dom";
+import React from "react";
+import { signout, hasAuthenticated } from "../auth";
+
+import "./Menu.css";
 
 /*
 what is withRouter?
@@ -15,49 +17,90 @@ Here the purpose of isActive function is to decide the color of current active l
 history.location.pathname returns the current route. In modern react this is done with the help of useLocation hook.
 */
 
-const isActive=(history,path)=>{
-    if(history.location.pathname===path)return {color: '#ccff00'}
-    else return {color: '#ffffff'}
-}
+const isActive = (history, path) => {
+  if (history.location.pathname === path) return { "marginRight": "20px",
+                                                    "fontSize": "18px",
+                                                    "fontWeight": "300",
+                                                    "cursor": "pointer",
+                                                    "color":"#444"};
+  else return { "marginRight": "20px",
+                "fontSize": "18px",
+                "fontWeight": "300",
+                "cursor": "pointer",
+                "color":"#666" };
+};
 
-
-const Menu=({history})=>(
-            <div>
-                <ul className="nav nav-tabs bg-primary">
-                    <li className="nav-item">
-                        <Link className='nav-link'to='/' style={isActive(history,'/')}>Home</Link>
-                    </li>  
-                    <li className="nav-item">
-                        <Link className='nav-link'to='/users' style={isActive(history,'/users')}>Users</Link>
-                    </li>  
-                
-                    { !hasAuthenticated() &&(
-                        <>
-                        <li className="nav-item">
-                            <Link className='nav-link' to='/signin' style={isActive(history,'/signin')}>Sign In</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className='nav-link' to='/signup' style={isActive(history,'/signup')}>Sign Up</Link>
-                        </li>
-                        </>
-                    )}
-                    { hasAuthenticated() && (
-                        <>
-                        <li className="nav-item">
-                            <span className='nav-link' onClick={()=>signout(()=>{history.push('/')})} style={(isActive(history,'/signout'),{cursor:'pointer'})}>Sign Out</span>
-                        </li>
-                        <li className="nav-item">
-                            <Link className='nav-link' to={`/users/${hasAuthenticated().User._id}`} style={(isActive(history,`/users/${hasAuthenticated().User._id}`))}>{hasAuthenticated().User.name}'s Profile </Link>                          
-                        </li>
-                        
-                        </>
-                    )}
-                    
-                </ul>        
-            </div>
-        )
-
-
+const Menu = ({ history }) => (
+  <div className="top">
+    <div className="topLeft">
+        <i className="topIcon fab fa-github-square"></i>
+        <i className="topIcon fab fa-facebook-square"></i>
+        <i className="topIcon fab fa-instagram-square"></i>
+        <i className="topIcon fab fa-pinterest-square"></i>
+        <i className="topIcon fab fa-twitter-square"></i>
+    </div>
+    <div className="topCenter">
+      <ul className="topList">
+        <li className="topListItem">
+          <Link to="/" style={isActive(history, "/")}>
+            HOME
+          </Link>
+        </li>
+        <li className="topListItem">
+          <Link to="/users" style={isActive(history, "/users")}>
+            USERS
+          </Link>
+        </li>
+        <li className="topListItem">POSTS</li>
+      </ul>
+    </div>
+    <div className="topRight">
+      <ul className="topList">
+        {!hasAuthenticated() && (
+          <>
+            <li className="topListItem">
+              <Link to="/signin" style={isActive(history, "/signin")}>
+                SIGN IN
+              </Link>
+            </li>
+            <li className="topListItem">
+              <Link to="/signup" style={isActive(history, "/signup")}>
+                SIGN UP
+              </Link>
+            </li>
+          </>
+        )}
+        {hasAuthenticated() && (
+          <>
+          <li className="topListItem">
+              <Link
+                to={`/users/${hasAuthenticated().User._id}`}
+                style={isActive(
+                  history,
+                  `/users/${hasAuthenticated().User._id}`
+                )}
+              >
+                {hasAuthenticated().User.name}'s Profile{" "}
+              </Link>
+            </li>   
+            <li className="topListItem">
+              <span
+                onClick={() =>
+                  signout(() => {
+                    history.push("/");
+                  })
+                }
+                style={(isActive(history, "/signout"), { cursor: "pointer" })}
+              >
+                SIGNOUT
+              </span>
+            </li>
+            
+          </>
+        )}
+      </ul>
+    </div>
+  </div>
+);
 
 export default withRouter(Menu);
-
